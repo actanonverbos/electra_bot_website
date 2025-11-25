@@ -4,13 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 export default function Home() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    
     // Keyboard shortcuts
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't trigger if user is typing in an input
@@ -38,10 +32,8 @@ export default function Home() {
       }
     };
     
-    window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
@@ -71,16 +63,6 @@ export default function Home() {
       
       {/* Footer */}
       <Footer />
-      
-      {/* Cursor glow effect */}
-      <div 
-        className="fixed pointer-events-none w-[500px] h-[500px] rounded-full opacity-15 blur-[120px] transition-transform duration-100"
-        style={{
-          background: 'radial-gradient(circle, rgba(59,130,246,0.5) 0%, transparent 70%)',
-          left: mousePos.x - 250,
-          top: mousePos.y - 250,
-        }}
-      />
     </main>
   );
 }
@@ -202,9 +184,9 @@ function HeroSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[70vh]">
           {/* Left side - Text content */}
           <div className="relative z-10">
-            {/* Built on Base badge - glassmorphism style */}
+            {/* EVM Chains badge - glassmorphism style */}
             <div className="inline-flex items-center gap-2 mb-8 text-[10px] text-[#8b8b9e] px-3 py-1.5 bg-white/5 backdrop-blur-md border border-white/10 rounded font-mono tracking-wider">
-              [ BUILT ON BASE ]
+              [ ALL EVM CHAINS ]
             </div>
             
             {/* Main headline */}
@@ -361,7 +343,7 @@ function StatsMarquee() {
   const stats = [
     { label: 'Sales notifications:', value: '10K+' },
     { label: 'Collections tracked:', value: '10+' },
-    { label: 'Built on:', value: 'Base' },
+    { label: 'Chains supported:', value: 'All EVM' },
     { label: 'Avg latency:', value: '<2s' },
   ];
   
@@ -418,7 +400,7 @@ function FeaturesSection() {
               </div>
             </div>
             
-            {/* Built For Base - with Base logo */}
+            {/* All EVM Chains - with Base logo */}
             <div className="group rounded-3xl p-8 bg-[#0052FF] text-white transition-all duration-300">
               <div className="flex gap-6 items-center">
                 <div className="w-32 h-32 relative flex-shrink-0 bg-white/10 rounded-2xl p-4">
@@ -430,9 +412,9 @@ function FeaturesSection() {
                   />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-3xl font-semibold mb-3" style={{ fontFamily: 'var(--font-primary)' }}>Built For Base</h3>
+                  <h3 className="text-3xl font-semibold mb-3" style={{ fontFamily: 'var(--font-primary)' }}>All EVM Chains</h3>
                   <p className="text-white/80 text-base leading-relaxed">
-                    We built this tool to track <strong className="text-white">Base NFT collections</strong>, ensuring accurate and real-time insights.
+                    Originally built for <strong className="text-white">Base</strong>, now supporting Ethereum, Polygon, Arbitrum, Optimism, and all EVM-compatible chains.
                   </p>
                 </div>
               </div>
@@ -589,8 +571,8 @@ function PricingSection() {
             )}
             
             <ul className="space-y-3 mb-8">
-              <PricingFeature>Instant buy alerts for your Base NFT collection</PricingFeature>
-              <PricingFeature>1 group chat integration</PricingFeature>
+              <PricingFeature>Instant buy alerts on any EVM chain</PricingFeature>
+              <PricingFeature>1 Telegram group integration</PricingFeature>
               <PricingFeature>1 NFT collection tracked</PricingFeature>
               <PricingFeature>Sweep alerts for multi-item buys</PricingFeature>
               <PricingFeature>Simple setup with admin controls</PricingFeature>
@@ -656,10 +638,16 @@ function PricingFeature({ children, highlight }: { children: React.ReactNode; hi
 
 function FAQSection() {
   const faqs = [
-    { q: 'How does the Electra Tech NFT Buy Bot work?', a: 'Electra monitors your NFT collection on Base and sends instant notifications to your Telegram group whenever a purchase is made.' },
+    { q: 'How does the Electra Tech NFT Buy Bot work?', a: 'Electra monitors your NFT collection on any EVM chain and sends instant notifications to your Telegram group whenever a purchase is made.' },
     { q: 'How do I set up the bot in my group?', a: 'Simply add the bot to your Telegram group, configure your collection address, and you\'re ready to go. Setup takes less than 2 minutes.' },
+    { q: 'Which blockchains are supported?', a: 'Electra supports all EVM-compatible chains including Base, Ethereum, Polygon, Arbitrum, Optimism, and more. We originally built for Base but have expanded to support the entire EVM ecosystem.' },
+    { q: 'What is a sweep alert?', a: 'A sweep alert triggers when a buyer purchases multiple NFTs in a single transaction. This often signals bullish movement and strong interest in a collection—great for sparking community excitement.' },
+    { q: 'Can I use the bot in multiple Telegram groups?', a: 'Each subscription covers one Telegram group. If you need alerts in multiple groups, you\'ll need a separate subscription for each.' },
+    { q: 'What payment methods do you accept?', a: 'We accept cryptocurrency payments only, processed securely through Coinbase Payments. This keeps transactions fast and fees low.' },
+    { q: 'Can I get a refund if I\'m not satisfied?', a: 'Yes! If you\'re not happy with the service, reach out and we\'ll work with you on a refund. Your satisfaction matters to us.' },
     { q: 'How do I renew my subscription?', a: 'You can renew your subscription anytime through our dashboard or by sending the renewal payment to your assigned wallet.' },
     { q: 'What happens if my subscription expires?', a: 'If your subscription expires, alerts will pause until renewed. Your configuration and history are saved for 30 days.' },
+    { q: 'How do I get support if something isn\'t working?', a: 'Reach out directly on Telegram at t.me/collect_0x for fast, personal support. We typically respond within a few hours.' },
   ];
   
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -716,7 +704,7 @@ function Footer() {
             <p className="text-[#666] text-sm">
               Built to inform and engage.
               <br />
-              Real-time NFT alerts for Base.
+              Real-time NFT alerts for all EVM chains.
             </p>
           </div>
           
@@ -735,7 +723,13 @@ function Footer() {
               <li>
                 <a href="https://t.me/electra_nft_bot" target="_blank" rel="noopener noreferrer" className="hover:text-[#3b82f6] transition-colors flex items-center gap-2">
                   <TelegramIcon className="w-4 h-4" />
-                  Telegram
+                  Add Bot
+                </a>
+              </li>
+              <li>
+                <a href="https://t.me/collect_0x" target="_blank" rel="noopener noreferrer" className="hover:text-[#3b82f6] transition-colors flex items-center gap-2">
+                  <TelegramIcon className="w-4 h-4" />
+                  Support
                 </a>
               </li>
               <li>
