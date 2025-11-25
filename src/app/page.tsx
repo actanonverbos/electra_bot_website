@@ -442,22 +442,13 @@ function FeaturesSection() {
           {/* Right column - Sweep Alert + Spot big buys as one tall card */}
           <div className="group rounded-3xl bg-[#f0f4f8] border-2 border-[#3b82f6] text-[#0a0a12] transition-all duration-300 flex flex-col overflow-hidden">
             {/* Sweep Alert Image - top section */}
-            <div className="relative h-[320px] overflow-hidden">
+            <div className="relative h-[420px] overflow-hidden">
               <Image 
                 src="/grid-section/aDaxIyQIDp4n47mpPNSiyoRo8.png.webp"
                 alt="Sweep Alert"
                 fill
                 className="object-contain object-top"
               />
-              {/* Secondary NFT image overlay */}
-              <div className="absolute bottom-4 right-4 w-28 h-28 rounded-xl overflow-hidden shadow-lg border-2 border-white">
-                <Image 
-                  src="/hero-slider/QX4zXoQFk9GlbfQoQ08gMIQbo.png.webp"
-                  alt="NFT Preview"
-                  fill
-                  className="object-cover"
-                />
-              </div>
             </div>
             
             {/* Spot big buys - bottom section */}
@@ -512,6 +503,21 @@ function HowItWorksSection() {
 }
 
 function PricingSection() {
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'quarterly' | 'annual'>('annual');
+  
+  const pricingData = {
+    monthly: { price: 40, period: '/month', perMonth: 40 },
+    quarterly: { price: 100, period: '/quarter', perMonth: 33.33 },
+    annual: { price: 300, period: '/year', perMonth: 25 },
+  };
+  
+  const currentPlan = pricingData[billingPeriod];
+  const savings = billingPeriod === 'annual' 
+    ? Math.round((1 - (pricingData.annual.perMonth / pricingData.monthly.perMonth)) * 100)
+    : billingPeriod === 'quarterly'
+    ? Math.round((1 - (pricingData.quarterly.perMonth / pricingData.monthly.perMonth)) * 100)
+    : 0;
+  
   return (
     <section id="pricing" className="py-24 px-6">
       <div className="max-w-6xl mx-auto">
@@ -521,23 +527,66 @@ function PricingSection() {
         </div>
         
         <h2 className="text-5xl md:text-6xl mb-4" style={{ fontFamily: 'var(--font-primary)' }}>Get Started</h2>
-        <p className="text-[#8b8b9e] text-xl mb-16 max-w-2xl">
+        <p className="text-[#8b8b9e] text-xl mb-10 max-w-2xl">
           Choose a plan that fits your needs. No hidden fees—just real-time alerts and engagement-driving features for your community.
         </p>
         
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Quarterly Plan */}
-          <div className="border-2 border-[#2a2a40] p-8 bg-[#12121c] hover:border-[#3b82f6] transition-colors rounded-2xl">
+        {/* Billing Period Tabs */}
+        <div className="flex justify-center mb-12">
+          <div className="inline-flex items-center bg-[#12121c] border border-[#2a2a40] rounded-xl p-1.5">
+            <BillingTab 
+              label="Monthly" 
+              isActive={billingPeriod === 'monthly'} 
+              onClick={() => setBillingPeriod('monthly')} 
+            />
+            <BillingTab 
+              label="Quarterly" 
+              isActive={billingPeriod === 'quarterly'} 
+              onClick={() => setBillingPeriod('quarterly')} 
+            />
+            <BillingTab 
+              label="Annual" 
+              isActive={billingPeriod === 'annual'} 
+              onClick={() => setBillingPeriod('annual')}
+              badge="Best Value"
+            />
+          </div>
+        </div>
+        
+        {/* Single Pricing Card */}
+        <div className="max-w-lg mx-auto">
+          <div className={`p-8 bg-[#12121c] relative rounded-2xl transition-all duration-300 ${
+            billingPeriod === 'annual' 
+              ? 'border-2 border-[#3b82f6]/50 shadow-[0_0_40px_rgba(59,130,246,0.15)]' 
+              : 'border-2 border-[#2a2a40] hover:border-[#3b82f6]/30'
+          }`}>
+            {billingPeriod === 'annual' && (
+              <div className="absolute -top-3 right-6 bg-[#3b82f6]/80 backdrop-blur-md text-white text-[10px] px-3 py-1 font-mono tracking-wider rounded border border-[#3b82f6]/50">
+                [ BEST VALUE ]
+              </div>
+            )}
             <div className="flex justify-between items-start mb-6">
               <span className="fig-label">[ FIG. 6 ]</span>
             </div>
-            <h3 className="text-2xl mb-2" style={{ fontFamily: 'var(--font-primary)' }}>Quarterly</h3>
+            <h3 className="text-2xl mb-2 capitalize" style={{ fontFamily: 'var(--font-primary)' }}>
+              {billingPeriod} Plan
+            </h3>
             <p className="text-sm text-[#666] mb-6">For communities looking to boost engagement with real-time insights.</p>
             
             <div className="mb-8">
-              <span className="text-5xl font-bold">0.03</span>
-              <span className="text-[#666] ml-2">ETH</span>
+              <span className="text-5xl font-bold">${currentPlan.price}</span>
+              <span className="text-[#666] ml-2">USD</span>
+              <span className="text-[#8b8b9e] text-sm ml-1">{currentPlan.period}</span>
+              {savings > 0 && (
+                <span className="text-[#22c55e] text-sm ml-3 bg-[#22c55e]/10 px-2 py-0.5 rounded">Save {savings}%</span>
+              )}
             </div>
+            
+            {billingPeriod !== 'monthly' && (
+              <div className="text-sm text-[#8b8b9e] mb-6 -mt-4">
+                ~${currentPlan.perMonth.toFixed(2)}/month
+              </div>
+            )}
             
             <ul className="space-y-3 mb-8">
               <PricingFeature>Instant buy alerts for your Base NFT collection</PricingFeature>
@@ -545,51 +594,16 @@ function PricingSection() {
               <PricingFeature>1 NFT collection tracked</PricingFeature>
               <PricingFeature>Sweep alerts for multi-item buys</PricingFeature>
               <PricingFeature>Simple setup with admin controls</PricingFeature>
-              <PricingFeature>Basic Support</PricingFeature>
+              <PricingFeature highlight={billingPeriod === 'annual'}>
+                {billingPeriod === 'annual' ? 'Advanced Analytics' : 'Basic Support'}
+              </PricingFeature>
             </ul>
             
             <a 
               href="https://t.me/electra_nft_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-4 bg-white/5 backdrop-blur-md border border-white/10 font-bold hover:bg-white/10 hover:border-[#3b82f6]/50 transition-all flex items-center justify-center gap-2 rounded-lg"
-            >
-              <TelegramIcon className="w-5 h-5" />
-              Add to Telegram →
-            </a>
-          </div>
-          
-          {/* Annual Plan */}
-          <div className="border border-[#3b82f6]/50 p-8 bg-[#12121c]/50 backdrop-blur-md relative rounded-2xl">
-            <div className="absolute -top-3 right-6 bg-[#3b82f6]/80 backdrop-blur-md text-white text-[10px] px-3 py-1 font-mono tracking-wider rounded border border-[#3b82f6]/50">
-              [ BEST VALUE ]
-            </div>
-            <div className="flex justify-between items-start mb-6">
-              <span className="fig-label">[ FIG. 7 ]</span>
-            </div>
-            <h3 className="text-2xl mb-2" style={{ fontFamily: 'var(--font-primary)' }}>Annual</h3>
-            <p className="text-sm text-[#666] mb-6">Essential tools for budgeting and expense tracking.</p>
-            
-            <div className="mb-8">
-              <span className="text-5xl font-bold">0.1</span>
-              <span className="text-[#666] ml-2">ETH</span>
-              <span className="text-[#22c55e] text-sm ml-2">(Save 53%)</span>
-            </div>
-            
-            <ul className="space-y-3 mb-8">
-              <PricingFeature>Instant buy alerts for your Base NFT collection</PricingFeature>
-              <PricingFeature>1 group chat integration</PricingFeature>
-              <PricingFeature>1 NFT collection tracked</PricingFeature>
-              <PricingFeature>Sweep alerts for multi-item buys</PricingFeature>
-              <PricingFeature>Simple setup with admin controls</PricingFeature>
-              <PricingFeature highlight>Advanced Analytics</PricingFeature>
-            </ul>
-            
-            <a 
-              href="https://t.me/electra_nft_bot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-4 bg-[#3b82f6]/80 backdrop-blur-md font-bold hover:bg-[#3b82f6] transition-all flex items-center justify-center gap-2 rounded-lg border border-[#3b82f6]/50 shadow-[0_0_30px_rgba(59,130,246,0.3)] hover:shadow-[0_0_40px_rgba(59,130,246,0.5)]"
+              className="w-full py-4 font-bold transition-all flex items-center justify-center gap-2 rounded-lg bg-[#3b82f6]/80 backdrop-blur-md hover:bg-[#3b82f6] border border-[#3b82f6]/50 shadow-[0_0_30px_rgba(59,130,246,0.3)] hover:shadow-[0_0_40px_rgba(59,130,246,0.5)]"
             >
               <TelegramIcon className="w-5 h-5" />
               Add to Telegram →
@@ -598,6 +612,36 @@ function PricingSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+function BillingTab({ 
+  label, 
+  isActive, 
+  onClick, 
+  badge 
+}: { 
+  label: string; 
+  isActive: boolean; 
+  onClick: () => void;
+  badge?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`relative px-5 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+        isActive 
+          ? 'bg-[#3b82f6] text-white shadow-lg' 
+          : 'text-[#8b8b9e] hover:text-white hover:bg-white/5'
+      }`}
+    >
+      {label}
+      {badge && !isActive && (
+        <span className="absolute -top-2 -right-2 bg-[#22c55e] text-[9px] text-white px-1.5 py-0.5 rounded-full font-bold whitespace-nowrap">
+          {badge}
+        </span>
+      )}
+    </button>
   );
 }
 
