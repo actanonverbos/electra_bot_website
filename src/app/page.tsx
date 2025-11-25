@@ -399,27 +399,27 @@ function FeaturesSection() {
           {/* Left column - 2 stacked cards */}
           <div className="flex flex-col gap-5">
             {/* Simple to use - with phone mockup */}
-            <div className="group rounded-3xl p-8 bg-[#f0f4f8] text-[#0a0a12] transition-all duration-300">
-              <div className="flex gap-6">
-                <div className="flex-1 flex flex-col justify-center">
-                  <h3 className="text-3xl font-semibold mb-4" style={{ fontFamily: 'var(--font-primary)' }}>Simple to use</h3>
+            <div className="group rounded-3xl pt-8 pl-8 pr-8 pb-0 bg-[#f0f4f8] text-[#0a0a12] transition-all duration-300 overflow-hidden flex-1 flex flex-col">
+              <div className="flex gap-6 flex-1">
+                <div className="flex-1 flex flex-col justify-center pb-8">
+                  <h3 className="text-4xl font-semibold mb-4" style={{ fontFamily: 'var(--font-primary)' }}>Simple to use</h3>
                   <p className="text-[#64748b] text-base leading-relaxed">
                     Get started in minutes —just add the bot, and it handles everything automatically.
                   </p>
                 </div>
-                <div className="w-44 h-56 relative flex-shrink-0">
+                <div className="w-48 min-h-[320px] relative flex-shrink-0 self-end">
                   <Image 
                     src="/grid-section/xWRng9Enh0RInyhBUCbdk2adbaM.png.webp"
                     alt="Phone mockup"
                     fill
-                    className="object-contain"
+                    className="object-contain object-bottom"
                   />
                 </div>
               </div>
             </div>
             
             {/* Built For Base - with Base logo */}
-            <div className="group rounded-3xl p-8 bg-[#3b82f6] text-white transition-all duration-300">
+            <div className="group rounded-3xl p-8 bg-[#0052FF] text-white transition-all duration-300">
               <div className="flex gap-6 items-center">
                 <div className="w-32 h-32 relative flex-shrink-0 bg-white/10 rounded-2xl p-4">
                   <Image 
